@@ -1,0 +1,11 @@
+{
+    "google": {
+        "dependencies": [
+            { "src": "https://accounts.google.com/gsi/client", "type": "script" }
+        ],
+        "authenticator": "google-authenticator.js"
+    },
+    "password": {
+        "authenticator": "password-authenticator.js"
+    }
+}

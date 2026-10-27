@@ -1,0 +1,28 @@
+:host {
+    position: fixed;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: #ccc8;
+    display: block;
+    z-index: 9999;
+}
+
+h1.header {
+    margin: 0 0 0.5rem;
+    text-align: center;
+    background-color: #fff4;
+}
+
+div.body {
+    padding: 0.4rem;
+}
+
+div.buttons {
+    padding: 0.4rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+button {
+    font-size: 1rem;
+}

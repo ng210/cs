@@ -1,0 +1,65 @@
+@font-face {
+    font-family: xmas1;
+    src: url(assets/MountainsofChristmas-Bold.ttf)
+}
+
+* {
+    box-sizing: border-box;
+    font-family: xmas1;
+}
+
+html {
+    font-size: 8pt;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto 1fr 4rem;
+    background-color: purple;
+}
+
+header {
+    background-color: cyan;
+}
+
+header>h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin: 1rem;
+}
+
+main {
+    background-color: brown;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+footer {
+    background-color: skyblue;
+
+}
+
+@media screen and (max-width: 1000px) {
+    html {
+        font-size: 6pt;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    html {
+        font-size: 4pt;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    html {
+        font-size: 6pt;
+    }
+}

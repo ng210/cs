@@ -1,0 +1,41 @@
+:host {
+    display: block;
+    width: 24rem;
+    height: 10.8rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border: 2px solid black;
+    box-shadow: 3px 2px 8px #0008;
+    background-color: #46c4;
+}
+
+h1 {
+    margin: 0;
+    padding: 0.5rem;
+    background-color: #0002;
+}
+
+div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    justify-content: space-around;
+}
+
+div>img {
+    grid-row: 1/span 4;
+    float: left;
+    padding-right: 0.3rem;
+    margin: 0.2rem;
+    border-right: 3px groove #8888;
+}
+
+div>label {
+    font-weight: bold;
+    background-color: #fff4;
+}
+
+div>span {
+    font-style: italic;
+    text-align: right;
+    padding-right: 0.4rem;
+}

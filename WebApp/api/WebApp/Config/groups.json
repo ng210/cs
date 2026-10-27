@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Users",
+    "Parent": null,
+    "Members": [],
+    "Rules": [
+      { "Path": "/api/components/**", "Allow": [ "Read" ], "Deny": [] }
+    ]
+  },
+  {
+    "Name": "Admins",
+    "Parent": "Users",
+    "Members": [
+      "nemeth.gabor@hbsz.edu.hu"
+    ],
+    "Rules": [
+      { "Path": "/api/**", "Allow": [ "Create", "Read", "Update", "Delete" ], "Deny": [] }
+    ]
+  }
+]

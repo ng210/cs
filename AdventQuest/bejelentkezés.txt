@@ -1,0 +1,13 @@
+A kliens megpróbál hozzáférni az API-hoz, és elküldi a korábban kapott munkamenet-azonosítót (session ID-t) vagy tokent.
+Az API ellenőrzi az azonosító érvényességét.
+    Ha érvényes, az API feldolgozza a kérést, és visszaküldi a választ.
+    Ha érvénytelen vagy hiányzik, az API elutasítja a kérést, a kliens pedig megjeleníti a Google-bejelentkezés lehetőségét.
+        A felhasználó bejelentkezik a Google-fiókjával.
+        A kliens a Google Identity Services szolgáltatástól Google ID tokent kap. Ez nem hozzáférési kód, és nem azonos az API saját munkamenet-azonosítójával.
+        A kliens elküldi a Google ID tokent az API-nak.
+        Az API ellenőrzi a tokent: többek között az aláírást, a lejáratot, a kibocsátót és azt, hogy a token a saját alkalmazásának szól-e.
+        Az API megállapítja a Google-fiókhoz tartozó felhasználó személyazonosságát, majd ellenőrzi, hogy a felhasználó jogosult-e az alkalmazás használatára. Szükség esetén létrehozza a helyi felhasználói fiókot.
+            Ha a felhasználó elfogadható, az API létrehoz egy saját munkamenetet.
+                Az API átadja a munkamenet-azonosítót a kliensnek. Sütialapú munkamenet esetén ezt célszerű HttpOnly cookie-ban megtenni, amelyet a böngésző automatikusan küld az API-nak.
+                A kliens a további kéréseknél használja a munkamenetet, az API pedig minden védett kérésnél ellenőrzi azt.
+            Ha a Google-token érvénytelen, vagy a felhasználó nem jogosult a belépésre, az API hibát küld a kliensnek, és nem hoz létre munkamenetet.
