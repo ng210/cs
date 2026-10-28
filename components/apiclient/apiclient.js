@@ -1,11 +1,12 @@
 import registry from './registry.json' with { type: 'json' }
-import IAuthenticator from "./iauthenticator.js"
-import AuthenticationError from './authentication-error.js' 
+import IAuthenticator from "../authenticators/iauthenticator.js"
+import AuthenticationError from '../authenticators/authentication-error.js' 
 import ApiError from './api-error.js' 
 
 export default class ApiClient extends EventTarget {
 
     static defaultOptions = {
+        'api-url': '/api',
         'auth-type': 'google',
         'auth-dir': 'authenticators'
     }
@@ -80,13 +81,13 @@ export default class ApiClient extends EventTarget {
         }
     }
 
-    constructor(url, options = {}) {
+    constructor(options = {}) {
         super()
-        this.#apiUrl = url
         this.#options = {
             ...ApiClient.defaultOptions,
             ...options
         }
+        this.#apiUrl = this.#options['api-url']
     }
 
     async request(path, options = {}) {
@@ -220,5 +221,15 @@ export default class ApiClient extends EventTarget {
             method: 'delete'
         })
         return this.getContent(response, options.responseType)
+    }
+
+    getToken(response) {
+        return this.post(
+            '/auth/google',
+            response,
+            {
+                shouldAuthorize: false,
+                responseType: 'text'
+            })
     }
 }

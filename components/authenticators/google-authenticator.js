@@ -1,5 +1,5 @@
-import AuthenticationError from '../lib/apiclient/authentication-error.js'
-import IAuthenticator from '../lib/apiclient/iauthenticator.js'
+import AuthenticationError from './authentication-error.js'
+import IAuthenticator from './iauthenticator.js'
 
 export default class GoogleAuthenticator extends IAuthenticator {
     static responseCounter = 1
@@ -9,7 +9,7 @@ export default class GoogleAuthenticator extends IAuthenticator {
     #authorizePromise = null
     #resolveAuthorize = null
     #rejectAuthorize = null
-    #responseHandlerName = null
+    //#responseHandlerName = null
     #authorizeTimer = null
     #isInitialized = false
 
@@ -21,41 +21,40 @@ export default class GoogleAuthenticator extends IAuthenticator {
         clearTimeout(this.#authorizeTimer)
         this.#authorizeTimer = null
 
-        if (this.#responseHandlerName) {
-            delete window[this.#responseHandlerName]
-            this.#responseHandlerName = null
-        }
+        // if (this.#responseHandlerName) {
+        //     delete window[this.#responseHandlerName]
+        //     this.#responseHandlerName = null
+        // }
 
         this.#authorizePromise = null
         this.#resolveAuthorize = null
         this.#rejectAuthorize = null
     }
 
-    getAuthenticationView() {
+    // getAuthenticationView() {
+    //     // this.#responseHandlerName = `onGglResponse_${GoogleAuthenticator.responseCounter++}`
+    //     // window[this.#responseHandlerName] = response => this.authenticate(response)
 
-        this.#responseHandlerName = `onGglResponse_${GoogleAuthenticator.responseCounter++}`
-        window[this.#responseHandlerName] = response => this.authenticate(response)
+    //     return `<b>Kérem, jelentkezzen be az iskolai email címével!</b>
+    //         <div id="gis-container"></div>`
+    // //             class="gsi"
+    // //             data-auto_prompt="false"
+    // //             data-callback="${this.#responseHandlerName}"
+    // //             data-client_id="${GoogleAuthenticator.clientId}"
+    // //             data-context="signin"
+    // //             data-ux_mode="popup"
+    // //             data-itp_support="true">
+    // //         </div>
 
-        return `<b>Kérem, jelentkezzen be az iskolai email címével!</b>
-            <div id="gis-container"></div>`
-    //             class="gsi"
-    //             data-auto_prompt="false"
-    //             data-callback="${this.#responseHandlerName}"
-    //             data-client_id="${GoogleAuthenticator.clientId}"
-    //             data-context="signin"
-    //             data-ux_mode="popup"
-    //             data-itp_support="true">
-    //         </div>
-
-    //         <div class="g_id_signin"
-    //             data-type="standard"
-    //             data-shape="pill"
-    //             data-theme="outline"
-    //             data-text="signin"
-    //             data-size="medium"
-    //             data-logo_alignment="left">
-    //         </div>
-    }
+    // //         <div class="g_id_signin"
+    // //             data-type="standard"
+    // //             data-shape="pill"
+    // //             data-theme="outline"
+    // //             data-text="signin"
+    // //             data-size="medium"
+    // //             data-logo_alignment="left">
+    // //         </div>
+    // }
 
     initializeAuthenticationView(container) {
         if (!this.#isInitialized) {
@@ -85,14 +84,7 @@ export default class GoogleAuthenticator extends IAuthenticator {
         if (!promise) return
 
         try {
-            const token = await this.client.post(
-                '/auth/google',
-                response,
-                {
-                    shouldAuthorize: false,
-                    responseType: 'text'
-                })
-
+            const token = await this.client.getToken(response)
             if (this.#authorizePromise !== promise) return
 
             localStorage.setItem('at', token)
@@ -138,12 +130,12 @@ export default class GoogleAuthenticator extends IAuthenticator {
                     this.#cleanUpAuthorization()
                 }, 90000)
 
-            const view = this.getAuthenticationView()
-            document.body.dispatchEvent(
+            //const view = this.getAuthenticationView()
+            document.dispatchEvent(
                 new CustomEvent('login-required', {
                     bubbles: true,
                     composed: true,
-                    detail: { view, sender: this }}))
+                    detail: { sender: this }}))
         }
 
         const promise = this.#authorizePromise

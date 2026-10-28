@@ -5,6 +5,7 @@ export default class UserCard extends HTMLElement {
         this.#user = data
         this.#update()
     }
+    get user() { return this.#user }
 
     #initialized = false
     #shadow = null

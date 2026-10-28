@@ -6,9 +6,9 @@ export default class IAuthenticator {
         this.#client = client
     }
 
-    getAuthenticationView() {
-        throw new Error('Not implemented!')
-    }
+    // getAuthenticationView() {
+    //     throw new Error('Not implemented!')
+    // }
 
     initializeAuthenticationView(container) {
     }
