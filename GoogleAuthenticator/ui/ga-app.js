@@ -15,7 +15,7 @@ class GoogleAuthenticatorApp extends WebApp {
             const user = await this.apiClient.get('/users/me')
         
             this.views.login.style.display = 'none'
-            this.views.content.style.display = 'block'
+            this.views.content.style.display = ''
         
             console.log('Bejelentkezett felhasználó:', user)
         
@@ -32,6 +32,8 @@ class GoogleAuthenticatorApp extends WebApp {
         super.initializeDom()
 
         this.views['user-card'] = this.shadowRoot.querySelector('user-card')
+        this.shadowRoot.querySelector('section.content-view>button')
+            .addEventListener('click', () => this.logout())
     }
 }
 

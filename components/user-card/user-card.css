@@ -2,8 +2,7 @@
     display: block;
     width: 24rem;
     height: 10.8rem;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
+    border-radius: 1rem;
     border: 2px solid black;
     box-shadow: 3px 2px 8px #0008;
     background-color: #46c4;

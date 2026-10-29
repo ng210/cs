@@ -18,7 +18,7 @@ namespace GoogleAuthenticator
 
             // Service hozzáadása
             builder.Services.AddAuthorization();
-            JwtTokenService.AddJwtAuthentication(builder);
+            GoogleJwtTokenService.AddJwtAuthentication(builder);
             builder.Services.AddCors(AddCorsPolicy);
 
             var app = builder.Build();
@@ -27,15 +27,22 @@ namespace GoogleAuthenticator
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapPost(
-                "/api/auth/google",
-                (JwtTokenService tokenService,
+            #region Auth/Google
+            app.MapPost("/api/auth/google",
+                (GoogleJwtTokenService tokenService,
                 HttpContext context,
                 GoogleLoginRequest request) => tokenService.GoogleLogin(context.User, request))
                 .AllowAnonymous();
 
-            app.MapGet(
-                "/api/users/me", (ClaimsPrincipal principal) => Results.Ok(new User
+            app.MapDelete("/api/auth/google",
+                (GoogleJwtTokenService tokenService,
+                HttpContext context) => tokenService.GoogleLogout(context.User))
+                .RequireAuthorization();
+            #endregion
+
+            #region User
+            app.MapGet("/api/users/me",
+                (ClaimsPrincipal principal) => Results.Ok(new User
                 {
                     Id = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "",
                     FirstName = principal.FindFirst(ClaimTypes.GivenName)?.Value ?? "",
@@ -44,6 +51,7 @@ namespace GoogleAuthenticator
                     ProfileImageUrl = principal.FindFirst("ProfileImageUrl")?.Value ?? ""
                 }))
                 .RequireAuthorization();
+            #endregion
 
             app.Run();
         }

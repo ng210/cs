@@ -24,8 +24,9 @@ export default class WebApp extends WebComponent {
 
     #loginRequiredHandler = event => {
         this.#views.content.style.display = 'none'
-        this.#views.login.style.display = 'block'
-        event.detail.sender.initializeAuthenticationView(this.#views.login)
+        this.#views.login.style.display = ''
+        let loginContainer = this.shadowRoot.querySelector('.login-container')
+        event.detail.sender.initializeAuthenticationView(loginContainer)
     }
 
     constructor(settings) {
@@ -61,6 +62,7 @@ export default class WebApp extends WebComponent {
         super.initializeDom()
         for (let key in this.settings.views) {
             this.#views[key] = this.shadowRoot.querySelector(this.settings.views[key])
+            this.#views[key].style.display = 'none'
         }
 
         if (!this.#views.login) throw new Error('Login view missing!')
@@ -76,5 +78,10 @@ export default class WebApp extends WebComponent {
 
     attributeChangedCallback(name, oldValue, newValue) {
 
+    }
+
+    async logout() {
+        await this.#apiClient.logout()
+        this.update()
     }
 }

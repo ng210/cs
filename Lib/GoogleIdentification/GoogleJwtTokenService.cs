@@ -2,16 +2,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json.Serialization.Metadata;
 
 namespace GoogleIdentification
 {
-    public sealed class JwtTokenService
+    public sealed class GoogleJwtTokenService
     {
         private string _issuer;
         private string _audience;
@@ -21,6 +21,8 @@ namespace GoogleIdentification
         private string _domain;
         public string Domain => _domain;
         private int _expirationMinutes;
+
+        private List<string> _tokenStore = [];
 
         private SigningCredentials? _credentials = null;
 
@@ -34,7 +36,7 @@ namespace GoogleIdentification
             "ProfileImageUrl"
         ];
 
-        public JwtTokenService(IConfiguration configuration)
+        public GoogleJwtTokenService(IConfiguration configuration)
         {
             _clientId = configuration["Client:Id"] ?? throw new InvalidDataException("Missing client id (Client:Id)");
             _domain = configuration["Client:Domain"] ?? throw new InvalidDataException("Missing domain (Client:Domain)");
@@ -46,9 +48,9 @@ namespace GoogleIdentification
             _credentials = new(new SymmetricSecurityKey(Convert.FromBase64String(_key)), SecurityAlgorithms.HmacSha256);
         }
 
-        public static JwtTokenService AddJwtAuthentication(WebApplicationBuilder builder)
+        public static GoogleJwtTokenService AddJwtAuthentication(WebApplicationBuilder builder)
         {
-            var jwtTokenService = new JwtTokenService(builder.Configuration);
+            var jwtTokenService = new GoogleJwtTokenService(builder.Configuration);
             jwtTokenService.AddAuthentication(builder);
             builder.Services.AddSingleton(jwtTokenService);
             return jwtTokenService;
@@ -65,10 +67,9 @@ namespace GoogleIdentification
                 notBefore: now,
                 expires: now.AddMinutes(_expirationMinutes),
                 signingCredentials: _credentials);
-
+            _tokenStore.Add(validClaims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
         private void AddAuthentication(WebApplicationBuilder builder)
         {
@@ -88,9 +89,25 @@ namespace GoogleIdentification
                         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(_key)),
 
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromSeconds(30)
+                        ClockSkew = TimeSpan.FromSeconds(30),
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = context =>
+                        {
+                            var jti = context.Principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+                            if (string.IsNullOrEmpty(jti) || !_tokenStore.Contains(jti))
+                            {
+                                context.Fail("Token is not active.");
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
+
+
         }
 
 
@@ -135,11 +152,22 @@ namespace GoogleIdentification
                 new(ClaimTypes.Name, payload.GivenName),
                 new(ClaimTypes.Email, payload.Email),
                 new("ProfileImageUrl", payload.Picture),
-
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             ]);
 
             return Results.Text(accessToken, "text/plain");
+        }
+
+        public IResult GoogleLogout(ClaimsPrincipal principal)
+        {
+            // token érvénytelen
+            var jti = principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+            if (!string.IsNullOrEmpty(jti))
+            {
+                _tokenStore.Remove(jti);
+                return Results.NoContent();
+            }
+            return Results.NotFound();
         }
     }
 }

@@ -232,4 +232,9 @@ export default class ApiClient extends EventTarget {
                 responseType: 'text'
             })
     }
+
+    async logout() {
+        await this.delete('/auth/google')
+        this.#authenticator.clearAuthentication()
+    }
 }
