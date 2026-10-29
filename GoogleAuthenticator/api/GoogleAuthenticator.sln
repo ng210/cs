@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAuthenticator", "GoogleAuthenticator.csproj", "{99E58651-56BB-75C0-9438-5DF688E480D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleIdentification", "..\..\Lib\GoogleIdentification\GoogleIdentification.csproj", "{61DB1E26-7614-FF7E-4BA9-26846C7C6674}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99E58651-56BB-75C0-9438-5DF688E480D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E58651-56BB-75C0-9438-5DF688E480D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E58651-56BB-75C0-9438-5DF688E480D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E58651-56BB-75C0-9438-5DF688E480D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61DB1E26-7614-FF7E-4BA9-26846C7C6674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61DB1E26-7614-FF7E-4BA9-26846C7C6674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61DB1E26-7614-FF7E-4BA9-26846C7C6674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61DB1E26-7614-FF7E-4BA9-26846C7C6674}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2F06D6D-5F4B-481C-9B0C-BC7406372CBB}
+	EndGlobalSection
+EndGlobal
